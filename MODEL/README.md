@@ -7,5 +7,5 @@ pip install -r requirements.txt
 
 Run scripty
 ```
-python run_forecast.py
+python forecast.py
 ```

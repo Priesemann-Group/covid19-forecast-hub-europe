@@ -167,7 +167,7 @@ with cov19.model.Cov19Model(**params_model) as this_model:
 
 """ # MCMC sampling
 """
-trace = pm.sample(model=this_model, init="advi", tune=500, draws=500)
+trace = pm.sample(model=this_model, init="advi", tune=5000, draws=5000)
 
 # Save trace in case there are some problems with post processing
 with open(f"./forecast.pickle", "wb") as f:
@@ -255,7 +255,7 @@ for id_week in weeks:
         trace=trace,
         var="new_cases",
         start=target_start,
-        end=target_end,
+        end=target_end + datetime.timedelta(days=1),
     )
 
     week_cases = np.median(forecast_new_cases.sum(axis=-1))

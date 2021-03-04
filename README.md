@@ -2,7 +2,7 @@
 
 This Fork is used to submit weekly updates to the ForecastHub-Eu project. The initial/main repo can be found [here](https://github.com/epiforecasts/covid19-forecast-hub-europe).
 
-## Inference forecast model
+## Bayesian inference of SIR-dynamics
 
 - Our model is based on the research article available on __[arXiv](https://arxiv.org/abs/2004.01105)__ and is in press __[at Science](https://science.sciencemag.org/content/early/2020/05/14/science.abb9789)__. In addition we published technical notes, answering some common questions: __[technical notes](technical_notes_dehning_etal_2020.pdf).__
 
