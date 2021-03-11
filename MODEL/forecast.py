@@ -4,6 +4,9 @@
     Runtime ~ 4h
 
 """
+import argparse
+
+
 import logging
 import datetime
 import pandas as pd
@@ -14,14 +17,33 @@ import pickle
 import matplotlib.pyplot as plt
 import scipy
 import csv
+import os
 
-log = logging.getLogger("ForecastScript")
+""" Parser i.e. input parameters for the script
+"""
+parser = argparse.ArgumentParser(description="Run forecast script")
+parser.add_argument(
+    "-c",
+    "--country",
+    type=str,
+    help="Country string to run forecasting on.",
+    required=True,
+)
+parser.add_argument(
+    "-i", "--iso2", type=str, help="ISO 3166-1 alpha-2 of country", required=True,
+)
+
+args = parser.parse_args()
+
+log = logging.getLogger(f"ForecastScript [{args.iso2}]")
+log.info(f"Running forecast for countries: {args.country}")
+
 
 """ # Data retrieval
 Download JHU data via our own data retrieval module
 """
 jhu = cov19.data_retrieval.JHU()
-jhu.download_all_available_data(force_download=True)
+jhu.download_all_available_data(force_local=True)
 
 # Running window of twenty weeks
 today = datetime.datetime.today()
@@ -34,18 +56,25 @@ data_begin = data_end - datetime.timedelta(weeks=12)
 
 # Get new cases from dataset filtered by date and country
 new_cases_obs = jhu.get_new(
-    "confirmed", country="Germany", data_begin=data_begin, data_end=data_end
+    "confirmed", country=args.country, data_begin=data_begin, data_end=data_end
 )
 total_cases_obs = jhu.get_total(
-    "confirmed", country="Germany", data_begin=data_begin, data_end=data_end
+    "confirmed", country=args.country, data_begin=data_begin, data_end=data_end
 )
 
 """ # Create changepoints
-TODO: think about the change points a bit
 """
-df_change_points = pd.read_csv("change_points.csv")
-df_change_points["date"] = pd.to_datetime(df_change_points["date"], format="%Y-%m-%d")
-df_change_points = df_change_points.set_index(df_change_points["date"])
+cp_fstring = f"./data_changepoints/{args.iso2}.csv"
+
+if not os.path.isfile(cp_fstring):
+    df_change_points = None
+else:
+    df_change_points = pd.read_csv(f"{args.iso2}.csv")
+    df_change_points["date"] = pd.to_datetime(
+        df_change_points["date"], format="%Y-%m-%d"
+    )
+    df_change_points = df_change_points.set_index(df_change_points["date"])
+
 change_points = [
     dict(
         pr_mean_date_transient=data_begin - datetime.timedelta(days=1),
@@ -57,13 +86,20 @@ change_points = [
 ]
 for day in pd.date_range(start=data_begin, end=data_end + datetime.timedelta(weeks=4)):
     if day.weekday() == 6:
-        # Prior factor to previous
-        if day.date() in [i.date() for i in df_change_points.index]:
-            index = [i.date() for i in df_change_points.index].index(day.date())
-            factor = df_change_points.iloc[index]["pr_factor_to_previous"]
+
+        # Check if dataframe exists:
+        if df_change_points is None:
+            factor = 1.0
         else:
-            log.info("Changepoint not found in dict using 1 as pr_factor_to_previous")
-            factor = 1
+            # Prior factor to previous
+            if day.date() in [i.date() for i in df_change_points.index]:
+                index = [i.date() for i in df_change_points.index].index(day.date())
+                factor = df_change_points.iloc[index]["pr_factor_to_previous"]
+            else:
+                log.info(
+                    "Changepoint not found in dict using 1 as pr_factor_to_previous"
+                )
+                factor = 1
 
         # Add cp
         change_points.append(
@@ -291,7 +327,7 @@ for id_week in weeks:
                 "scenario_id": "forecast",
                 "target": f"{str(id_week+1)} wk ahead inc case",
                 "target_end_date": target_end.strftime("%Y-%m-%d"),
-                "location": "DE",
+                "location": args.iso2,
                 "type": "quantile",
                 "quantile": quantile,
                 "value": quantile_cases,
@@ -301,15 +337,26 @@ for id_week in weeks:
 
 
 # Save data
-data.to_csv(
-    f'../data-processed/Priesemann-bayes/{(data_end + datetime.timedelta(days=1)).strftime("%Y-%m-%d")}-Priesemann-bayes.csv',
-    index=False,
-    quoting=csv.QUOTE_ALL,
-)
+fstring = f'../data-processed/Priesemann-bayes/{(data_end + datetime.timedelta(days=1)).strftime("%Y-%m-%d")}-Priesemann-bayes.csv'
+
+
+# If file does not exist create header
+# It could happen that files gets overwritten with this setup but is very unlikely... Good for now
+if not os.path.isfile(fstring):
+    with open(fstring, "wb") as file:
+        data.to_csv(
+            file, header=True, index=False, quoting=csv.QUOTE_ALL,
+        )
+else:
+    # Append to existing file
+    with open(fstring, "ab") as file:
+        data.to_csv(
+            file, mode="a", header=False, index=False, quoting=csv.QUOTE_ALL,
+        )
 
 """ # Sanity check plots
 """
-save_to = "./figures/"
+save_to = f"./figures/{args.iso2}_"
 
 fig, axes = cov19.plot.timeseries_overview(this_model, trace, offset=total_cases_obs[0])
 
