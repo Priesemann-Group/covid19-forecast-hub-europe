@@ -1,7 +1,7 @@
 #!/bin/bash [could also be /bin/tcsh]
 #$ -S /bin/bash
 #$ -N COVID19-forecast
-#$ -pe mvapich2-zal 32
+#$ -pe mvapich2-sam 32
 #$ -cwd
 #$ -o $HOME/logs/output-forecasthubeu
 #$ -e $HOME/logs/errors-forecasthubeu
