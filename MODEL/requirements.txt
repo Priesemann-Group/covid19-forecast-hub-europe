@@ -3,6 +3,5 @@ requests
 arviz>=0.11.2
 pandas
 numpy
-theano==1.0.4
 scipy
 
