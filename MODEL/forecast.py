@@ -42,6 +42,8 @@ log.info(f"Running forecast for countries: {args.country}")
 """ # Data retrieval
 Download JHU data via our own data retrieval module
 """
+cov19.data.retrieval.set_data_dir(fname="./data_covid19_inference")
+
 jhu = cov19.data_retrieval.JHU()
 jhu.download_all_available_data(force_local=True)
 
