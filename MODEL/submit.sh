@@ -5,7 +5,7 @@
 #$ -cwd
 #$ -o $HOME/logs/output-forecasthubeu
 #$ -e $HOME/logs/errors-forecasthubeu
-#$ -t 0:3:1
+#$ -t 1:4:1
 
 # >>>  conda initialize >>>
 . $HOME/anaconda3/etc/profile.d/conda.sh

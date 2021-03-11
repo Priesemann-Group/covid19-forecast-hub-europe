@@ -2,7 +2,7 @@
 # @Author:        Sebastian B. Mohr
 # @Email:
 # @Created:       2021-03-11 14:52:21
-# @Last Modified: 2021-03-11 15:25:50
+# @Last Modified: 2021-03-11 16:04:09
 # ------------------------------------------------------------------------------ #
 import argparse
 import logging
@@ -17,6 +17,7 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+args.id = args.id - 1
 log.info(f"ID: {args.id}")
 
 
