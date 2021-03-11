@@ -71,7 +71,7 @@ cp_fstring = f"./data_changepoints/{args.iso2}.csv"
 if not os.path.isfile(cp_fstring):
     df_change_points = None
 else:
-    df_change_points = pd.read_csv(f"{args.iso2}.csv")
+    df_change_points = pd.read_csv(cp_fstring)
     df_change_points["date"] = pd.to_datetime(
         df_change_points["date"], format="%Y-%m-%d"
     )
