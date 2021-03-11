@@ -1,7 +1,1 @@
-git+https://github.com/Priesemann-Group/covid19_inference
-requests
-arviz>=0.11.2
-pandas
-numpy
-scipy
-
+covid19_inference
