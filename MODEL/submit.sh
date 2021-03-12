@@ -21,3 +21,5 @@ conda activate forecasthub
 cd $HOME/Repositories/covid19-forecast-hub-europe/MODEL
 
 python -u ./cluster_run.py -i $SGE_TASK_ID
+
+date >> $HOME/logs/time_forecasthub
