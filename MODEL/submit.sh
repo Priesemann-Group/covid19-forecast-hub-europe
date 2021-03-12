@@ -7,6 +7,12 @@
 #$ -e $HOME/logs/errors-forecasthubeu
 #$ -t 1:4:1
 
+# avoid multithreading in numpy
+export OPENBLAS_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+
 # >>>  conda initialize >>>
 . $HOME/anaconda3/etc/profile.d/conda.sh
 conda activate forecasthub
