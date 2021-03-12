@@ -64,6 +64,9 @@ total_cases_obs = jhu.get_total(
     "confirmed", country=args.country, data_begin=data_begin, data_end=data_end
 )
 
+if new_cases_obs.sum() < 3000:
+    log.error("Not enought cases for sampling")
+
 """ # Create changepoints
 """
 cp_fstring = f"./data_changepoints/{args.iso2}.csv"

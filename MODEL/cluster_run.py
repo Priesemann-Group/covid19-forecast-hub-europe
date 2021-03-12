@@ -2,7 +2,7 @@
 # @Author:        Sebastian B. Mohr
 # @Email:
 # @Created:       2021-03-11 14:52:21
-# @Last Modified: 2021-03-11 16:04:09
+# @Last Modified: 2021-03-12 17:39:13
 # ------------------------------------------------------------------------------ #
 import argparse
 import logging
@@ -57,14 +57,14 @@ countries = {
 }
 
 # Split countries into groups of 8
+num_parallel = 1
+
 mapping = []
 inner = []
 count = 0
 for i, country in enumerate(countries):
-
     inner.append(country)
-
-    if count == 8:
+    if count == num_parallel:
         mapping.append(inner)
         inner = []
         count = 0
@@ -81,5 +81,5 @@ def exec(country_string):
     )
 
 
-with Pool(32 // 4) as p:
+with Pool(32 // num_parallel) as p:
     p.map(exec, mapping[args.id])
