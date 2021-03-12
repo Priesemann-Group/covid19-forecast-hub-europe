@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import scipy
 import csv
 import os
+import arviz as az
 
 """ Parser i.e. input parameters for the script
 """
@@ -65,7 +66,8 @@ total_cases_obs = jhu.get_total(
 )
 
 if new_cases_obs.sum() < 3000:
-    log.error("Not enought cases for sampling")
+    log.error("Not enought new cases for sampling")
+    exit()
 
 """ # Create changepoints
 """
@@ -222,6 +224,10 @@ trace = pm.sample(
 with open(f"./pickled/{args.iso2}.pickle", "wb") as f:
     pickle.dump((this_model, trace), f)
 
+
+if az.rhat(trace).max().to_array().max() > 1.1:
+    log.error("Rhat greater than 1.1")
+    exit()
 
 """ # Data post processing (submission)
 We compute the sum of all new cases for the next weeks as defined here:
