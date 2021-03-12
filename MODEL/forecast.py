@@ -205,10 +205,18 @@ with cov19.model.Cov19Model(**params_model) as this_model:
 
 """ # MCMC sampling
 """
-trace = pm.sample(model=this_model, init="advi", tune=5000, draws=5000)
+trace = pm.sample(
+    model=this_model,
+    init="advi",
+    tune=5000,
+    draws=5000,
+    chains=4,
+    cores=4,
+    progressbar=True,
+)
 
 # Save trace in case there are some problems with post processing
-with open(f"./forecast.pickle", "wb") as f:
+with open(f"./pickled/{args.iso2}.pickle", "wb") as f:
     pickle.dump((this_model, trace), f)
 
 
@@ -307,7 +315,7 @@ for id_week in weeks:
             "scenario_id": "forecast",
             "target": f"{str(id_week+1)} wk ahead inc case",
             "target_end_date": target_end.strftime("%Y-%m-%d"),
-            "location": "DE",
+            "location": args.iso2,
             "type": "point",
             "quantile": "NA",
             "value": week_cases,
@@ -355,103 +363,3 @@ else:
         data.to_csv(
             file, mode="a", header=False, index=False, quoting=csv.QUOTE_ALL,
         )
-
-""" # Sanity check plots
-"""
-save_to = f"./figures/{args.iso2}_"
-
-fig, axes = cov19.plot.timeseries_overview(this_model, trace, offset=total_cases_obs[0])
-
-for ax in axes:
-    ax.set_xlim(datetime.datetime.now() - datetime.timedelta(days=4 * 17))
-# Set y lim for effective growth rate
-axes[0].set_ylim(-0.08, 0.1)
-axes[1].set_ylim(0, new_cases_obs.max() + 5000)
-# Add vline for today
-
-""" Add text for current reproduction number
-"""
-
-
-def mean_confidence_interval(data, confidence=0.95):
-    a = 1.0 * np.array(data)
-    n = len(a)
-    m, se = np.mean(a), scipy.stats.sem(a)
-    h = se * scipy.stats.t.ppf((1 + confidence) / 2.0, n - 1)
-    return m, m - h, m + h
-
-
-f_trunc = lambda number, precision: "{{:.{}f}}".format(precision).format(number)
-num_rows = len(change_points) + 1 + 1
-last = num_rows - 2
-current_R = (trace[f"lambda_{last}"] - trace["mu"] + 1) ** 4
-from covid19_inference.plot import (
-    _get_mpl_text_coordinates,
-    _add_mpl_rect_around_text,
-)
-
-med, perc1, perc2 = mean_confidence_interval(current_R)
-text_md = f"{f_trunc(med,3)}"
-text_ci = f"[{f_trunc(perc1,3)}, {f_trunc(perc2,3)}]"
-tel_md = axes[0].text(
-    0.8,
-    0.9,  # let's have a ten percent margin or so
-    r"Current $R_{RKI} \simeq " + text_md + r"$",
-    fontsize=10,
-    transform=axes[0].transAxes,
-    verticalalignment="top",
-    horizontalalignment="center",
-    zorder=100,
-)
-x_min, x_max, y_min, y_max = _get_mpl_text_coordinates(tel_md, axes[0])
-tel_ci = axes[0].text(
-    0.8,
-    y_min * 0.9,  # let's have a ten percent margin or so
-    text_ci,
-    fontsize=8,
-    transform=axes[0].transAxes,
-    verticalalignment="top",
-    horizontalalignment="center",
-    zorder=101,
-)
-_add_mpl_rect_around_text(
-    [tel_md, tel_ci], axes[0], facecolor="#F0F0F0", alpha=0.5, zorder=99,
-)
-
-# --------------------------------------------------------------------------- #
-# inset new cases
-# --------------------------------------------------------------------------- #
-# Add inset for march to juli
-"""
-from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
-
-axins = axes[1].inset_axes(bounds=[0.1, 0.5, 0.4, 0.4])
-for line in axes[1].lines:
-    axins.lines.append(line)
-
-ax = axins
-
-new_cases_inset = owd.get_new(
-    "confirmed",
-    country="Germany",
-    data_begin=datetime.datetime(2020, 4, 2),
-    data_end=data_end,
-)
-
-# model fit
-cov19.plot._timeseries(
-    x=new_cases_inset.index, y=new_cases_inset, ax=ax, what="model", color="tab:orange",
-)
-prec = 1.0 / (np.log10(ax.get_ylim()[1]) - 2.5)
-if prec < 2.0 and prec >= 0:
-    ax.yaxis.set_major_formatter(
-        mpl.ticker.FuncFormatter(cov19.plot._format_k(int(prec)))
-    )
-    ticks = ax.get_xticks()
-    ax.set_xticks(ticks=[new_cases_inset.index.min(), new_cases_inset.index.max()])
-
-"""
-# save: ts for timeseries
-plt.savefig(
-    save_to + "ts.png", dpi=300, bbox_inches="tight", pad_inches=0.05,
-)
