@@ -2,7 +2,7 @@
 # @Author:        Sebastian B. Mohr
 # @Email:
 # @Created:       2021-03-11 14:52:21
-# @Last Modified: 2021-03-12 17:39:13
+# @Last Modified: 2021-03-15 22:32:55
 # ------------------------------------------------------------------------------ #
 import argparse
 import logging
@@ -24,14 +24,14 @@ log.info(f"ID: {args.id}")
 countries = {
     "Austria": {"iso2": "AT"},
     "Belgium": {"iso2": "BE"},
-    "Bulgaria": {"iso2": "BY"},
+    "Bulgaria": {"iso2": "BG"},
     "Croatia": {"iso2": "HR"},
     "Cyprus": {"iso2": "CY"},
     "Czechia": {"iso2": "CZ"},
     "Denmark": {"iso2": "DK"},
     "Estonia": {"iso2": "EE"},
     "Finland": {"iso2": "FI"},
-    "France": {"iso2": "FX"},
+    "France": {"iso2": "FR"},
     "Germany": {"iso2": "DE"},
     "Greece": {"iso2": "GR"},
     "Hungary": {"iso2": "HU"},
