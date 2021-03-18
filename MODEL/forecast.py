@@ -33,7 +33,9 @@ parser.add_argument(
 parser.add_argument(
     "-i", "--iso2", type=str, help="ISO 3166-1 alpha-2 of country", required=True,
 )
-
+parser.add_argument(
+    "-p", "--population", type=int, help="Population of desired country", required=True,
+)
 args = parser.parse_args()
 
 log = logging.getLogger(f"ForecastScript [{args.iso2}]")
@@ -132,7 +134,7 @@ params_model = dict(
     data_begin=data_begin,
     fcast_len=num_days_forecast,
     diff_data_sim=diff_data_sim,
-    N_population=83e6,
+    N_population=args.population,
 )
 
 # Median of the prior for the delay in case reporting, we assume 10 days

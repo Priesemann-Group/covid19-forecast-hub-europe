@@ -2,7 +2,7 @@
 # @Author:        Sebastian B. Mohr
 # @Email:
 # @Created:       2021-03-11 14:52:21
-# @Last Modified: 2021-03-15 22:32:55
+# @Last Modified: 2021-03-18 11:38:58
 # ------------------------------------------------------------------------------ #
 import argparse
 import logging
@@ -22,38 +22,38 @@ log.info(f"ID: {args.id}")
 
 
 countries = {
-    "Austria": {"iso2": "AT"},
-    "Belgium": {"iso2": "BE"},
-    "Bulgaria": {"iso2": "BG"},
-    "Croatia": {"iso2": "HR"},
-    "Cyprus": {"iso2": "CY"},
-    "Czechia": {"iso2": "CZ"},
-    "Denmark": {"iso2": "DK"},
-    "Estonia": {"iso2": "EE"},
-    "Finland": {"iso2": "FI"},
-    "France": {"iso2": "FR"},
-    "Germany": {"iso2": "DE"},
-    "Greece": {"iso2": "GR"},
-    "Hungary": {"iso2": "HU"},
-    "Iceland": {"iso2": "IS"},
-    "Ireland": {"iso2": "IE"},
-    "Italy": {"iso2": "IT"},
-    "Latvia": {"iso2": "LV"},
-    "Liechtenstein": {"iso2": "LI"},
-    "Lithuania": {"iso2": "LT"},
-    "Luxembourg": {"iso2": "LU"},
-    "Malta": {"iso2": "MT"},
-    "Netherlands": {"iso2": "NL"},
-    "Norway": {"iso2": "NO"},
-    "Poland": {"iso2": "PL"},
-    "Portugal": {"iso2": "PT"},
-    "Romania": {"iso2": "RO"},
-    "Slovakia": {"iso2": "SK"},
-    "Slovenia": {"iso2": "SI"},
-    "Spain": {"iso2": "ES"},
-    "Sweden": {"iso2": "SE"},
-    "Switzerland": {"iso2": "CH"},
-    "United Kingdom": {"iso2": "GB"},
+    "Austria": {"population": 8933346, "iso2": "AT"},
+    "Belgium": {"population": 11396775, "iso2": "BE"},
+    "Bulgaria": {"population": 6911167, "iso2": "BG"},
+    "Croatia": {"population": 4087234, "iso2": "HR"},
+    "Cyprus": {"population": 1213585, "iso2": "CY"},
+    "Czechia": {"population": 10723088, "iso2": "CZ"},
+    "Denmark": {"population": 5806675, "iso2": "DK"},
+    "Estonia": {"population": 1327169, "iso2": "EE"},
+    "Finland": {"population": 5546833, "iso2": "FI"},
+    "France": {"population": 65376055, "iso2": "FR"},
+    "Germany": {"population": 83974064, "iso2": "DE"},
+    "Greece": {"population": 10386806, "iso2": "GR"},
+    "Hungary": {"population": 9642902, "iso2": "HU"},
+    "Iceland": {"population": 342812, "iso2": "IS"},
+    "Ireland": {"population": 4976791, "iso2": "IE"},
+    "Italy": {"population": 60398612, "iso2": "IT"},
+    "Latvia": {"population": 1871316, "iso2": "LV"},
+    "Liechtenstein": {"population": 38206, "iso2": "LI"},
+    "Lithuania": {"population": 2695154, "iso2": "LT"},
+    "Luxembourg": {"population": 633162, "iso2": "LU"},
+    "Malta": {"population": 442378, "iso2": "MT"},
+    "Netherlands": {"population": 17161789, "iso2": "NL"},
+    "Norway": {"population": 5451264, "iso2": "NO"},
+    "Poland": {"population": 37817143, "iso2": "PL"},
+    "Portugal": {"population": 10175557, "iso2": "PT"},
+    "Romania": {"population": 19146259, "iso2": "RO"},
+    "Slovakia": {"population": 5461521, "iso2": "SK"},
+    "Slovenia": {"population": 2079141, "iso2": "SI"},
+    "Spain": {"population": 46767645, "iso2": "ES"},
+    "Sweden": {"population": 10143897, "iso2": "SE"},
+    "Switzerland": {"population": 8699459, "iso2": "CH"},
+    "United Kingdom": {"population": 68138862, "iso2": "GB"},
 }
 
 # Split countries into groups of 8
@@ -77,7 +77,7 @@ def exec(country_string):
     Executes python script
     """
     os.system(
-        f'python forecast.py -c {country_string} -i {countries[country_string]["iso2"]}'
+        f'python forecast.py -c {country_string} -i {countries[country_string]["iso2"]} -p {countries[country_string]["population"]}'
     )
 
 
