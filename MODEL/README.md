@@ -7,5 +7,5 @@ pip install -r requirements.txt
 
 Run scripty
 ```
-python forecast.py
+python forecast.py -c [COUNTRYNAME] -i [ISOCODE] -p [POPULATION]
 ```

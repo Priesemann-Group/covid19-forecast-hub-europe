@@ -9,3 +9,11 @@ This Fork is used to submit weekly updates to the ForecastHub-Eu project. The in
 - We published a python package which we use for our forecasting/modeling approach in this repository: __[covid19_inference](https://github.com/Priesemann-Group/covid19_inference)__
 
 - Additional you can find daily updated figures for current numbers in Germany __[here](https://github.com/Priesemann-Group/covid19_inference_forecast)__.
+
+
+## Model
+
+This model simulates SIR-dynamics with a log-normal convolutions of infections to obtain the delayed reported cases.
+Parameters of the model are sampled with Hamiltonian Monte-Carlo using the PyMC3 Python library. We assume that the infection rate can change every week, with a standard deviation that is also an optimized parameter. When new governmental restrictions are enacted or lifted, we include a small prior to the change of the infection rate.
+
+The scripts to run our model can be found in the `MODEL` folder.
