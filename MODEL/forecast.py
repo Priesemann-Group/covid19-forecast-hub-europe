@@ -269,7 +269,7 @@ data = pd.DataFrame(
         "value",
     ]
 )
-weeks = [0, 1, 2, 3]
+weeks = [0, 1]
 quantiles = [
     0.01,
     0.025,
