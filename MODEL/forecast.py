@@ -31,10 +31,18 @@ parser.add_argument(
     required=True,
 )
 parser.add_argument(
-    "-i", "--iso2", type=str, help="ISO 3166-1 alpha-2 of country", required=True,
+    "-i",
+    "--iso2",
+    type=str,
+    help="ISO 3166-1 alpha-2 of country",
+    required=True,
 )
 parser.add_argument(
-    "-p", "--population", type=int, help="Population of desired country", required=True,
+    "-p",
+    "--population",
+    type=int,
+    help="Population of desired country",
+    required=True,
 )
 args = parser.parse_args()
 
@@ -329,7 +337,7 @@ for id_week in weeks:
             "location": args.iso2,
             "type": "point",
             "quantile": "NA",
-            "value": week_cases,
+            "value": int(week_cases),
         },
         ignore_index=True,
     )
@@ -351,7 +359,7 @@ for id_week in weeks:
                 "location": args.iso2,
                 "type": "quantile",
                 "quantile": quantile,
-                "value": quantile_cases,
+                "value": int(quantile_cases),
             },
             ignore_index=True,
         )
@@ -366,11 +374,18 @@ fstring = f'../data-processed/Priesemann-bayes/{(data_end + datetime.timedelta(d
 if not os.path.isfile(fstring):
     with open(fstring, "wb") as file:
         data.to_csv(
-            file, header=True, index=False, quoting=csv.QUOTE_ALL,
+            file,
+            header=True,
+            index=False,
+            quoting=csv.QUOTE_ALL,
         )
 else:
     # Append to existing file
     with open(fstring, "ab") as file:
         data.to_csv(
-            file, mode="a", header=False, index=False, quoting=csv.QUOTE_ALL,
+            file,
+            mode="a",
+            header=False,
+            index=False,
+            quoting=csv.QUOTE_ALL,
         )
