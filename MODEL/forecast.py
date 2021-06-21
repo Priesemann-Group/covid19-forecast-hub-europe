@@ -366,7 +366,7 @@ for id_week in weeks:
 
 
 # Save data
-fstring = f'../data-processed/Priesemann-bayes/{(data_end + datetime.timedelta(days=1)).strftime("%Y-%m-%d")}-Priesemann-bayes.csv'
+fstring = f'../data-processed/DSMPG-bayes/{(data_end + datetime.timedelta(days=1)).strftime("%Y-%m-%d")}-DSMPG-bayes.csv'
 
 
 # If file does not exist create header
